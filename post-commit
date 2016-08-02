@@ -7,7 +7,6 @@ USER=$(svnlook author -r $REV $REPOS)
 TEXT=$(svnlook log -r $REV $REPOS)
 COUNT=$(svnlook changed $REPOS -r $REV | wc -l)
 BRANCH=$(svnlook dirs-changed -r $REV $REPOS)
-echo "rev: $REV, REPOS: $REPOS, author: $user, log: $TEXT, count: $COUNT,dir: $BRANCH" >> /tmp/a.log
 
 payload="{\"text\": \"$TEXT\", \"user\": \"$USER\", \"branch\": \"$BRANCH\", \"count\": \"$COUNT\",\"rev\":\"$REV\" }"
 
