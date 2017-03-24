@@ -4,12 +4,13 @@ HOOKS=""
 REPOS="$1"
 REV="$2"
 USER=$(svnlook author -r $REV $REPOS)
-TEXT=$(svnlook log -r $REV $REPOS)
+TEXT=$(svnlook log -r $REV $REPOS | tr '\n' '\\' | sed 's/\\/\\n/g')
 COUNT=$(svnlook changed $REPOS -r $REV | wc -l)
 BRANCH=$(svnlook dirs-changed -r $REV $REPOS)
+echo "$TEXT" >> /tmp/svn.log
 
 payload="{\"text\": \"$TEXT\", \"user\": \"$USER\", \"branch\": \"$BRANCH\", \"count\": \"$COUNT\",\"rev\":\"$REV\" }"
 
 curl -fsSL -X "POST" "$HOOKS" \
-	 -H "Content-Type: application/json" \
+	 -H "Content-Type: application/json;charset=UTF-8" \
 	 -d "$payload"
